@@ -1,5 +1,5 @@
 region                        = "us-east-1"
-domain                        = "ecsfargateexample.tk"
+domain                        = "bberst.net"
 
 /* rds */
 production_database_name      = "openjobs_production"
