@@ -128,7 +128,7 @@ resource "aws_security_group" "web_inbound_sg" {
 resource "aws_alb" "alb_openjobs" {
   name            = "${var.environment}-alb-openjobs"
   subnets         = var.public_subnet_ids
-  security_groups = [var.security_groups_ids, aws_security_group.web_inbound_sg.id]
+  security_groups = [var.security_groups_ids[0], aws_security_group.web_inbound_sg.id]
 
   tags = {
     Name        = "${var.environment}-alb-openjobs"
@@ -249,7 +249,7 @@ resource "aws_ecs_service" "web" {
   cluster       = aws_ecs_cluster.cluster.id
 
   network_configuration {
-    security_groups = [var.security_groups_ids, aws_security_group.ecs_service.id]
+    security_groups = [var.security_groups_ids[0], aws_security_group.ecs_service.id]
     subnets         = var.subnets_ids
   }
 
