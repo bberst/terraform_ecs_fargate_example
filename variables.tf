@@ -25,3 +25,4 @@ variable "production_secret_key_base" {
 variable "domain" {
   default = "The domain of your application"
 }
+

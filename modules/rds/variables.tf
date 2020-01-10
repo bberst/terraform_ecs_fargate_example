@@ -3,7 +3,7 @@ variable "environment" {
 }
 
 variable "subnet_ids" {
-  type        = "list"
+  type        = list(string)
   description = "Subnet ids"
 }
 
@@ -40,3 +40,4 @@ variable "database_username" {
 variable "database_password" {
   description = "The password of the database"
 }
+
