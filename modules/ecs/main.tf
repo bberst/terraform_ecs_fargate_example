@@ -242,7 +242,6 @@ resource "aws_ecs_service" "web" {
   desired_count   = 2
   launch_type     = "FARGATE"
   cluster =       "${aws_ecs_cluster.cluster.id}"
-  depends_on      = ["aws_iam_role_policy.ecs_service_role_policy"]
 
   network_configuration {
     security_groups = ["${var.security_groups_ids}", "${aws_security_group.ecs_service.id}"]
@@ -255,7 +254,7 @@ resource "aws_ecs_service" "web" {
     container_port   = "80"
   }
 
-  depends_on = ["aws_alb_target_group.alb_target_group"]
+  depends_on = ["aws_alb_target_group.alb_target_group","aws_iam_role_policy.ecs_service_role_policy"]
 }
 
 
