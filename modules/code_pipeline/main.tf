@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "source" {
-  bucket        = "openjobs-experiment-source"
+  bucket        = "bberst-experiment-source"
   acl           = "private"
   force_destroy = true
 }
@@ -59,8 +59,8 @@ data "template_file" "buildspec" {
   }
 }
 
-resource "aws_codebuild_project" "openjobs_build" {
-  name          = "openjobs-codebuild"
+resource "aws_codebuild_project" "bberst_build" {
+  name          = "bberst-codebuild"
   build_timeout = "10"
   service_role  = aws_iam_role.codebuild_role.arn
 
@@ -86,7 +86,7 @@ resource "aws_codebuild_project" "openjobs_build" {
 /* CodePipeline */
 
 resource "aws_codepipeline" "pipeline" {
-  name     = "openjobs-pipeline"
+  name     = "bberst-pipeline"
   role_arn = aws_iam_role.codepipeline_role.arn
 
   artifact_store {
@@ -106,8 +106,8 @@ resource "aws_codepipeline" "pipeline" {
       output_artifacts = ["source"]
 
       configuration = {
-        Owner  = "duduribeiro"
-        Repo   = "openjobs_experiment"
+        Owner  = "bberst"
+        Repo   = "quest"
         Branch = "master"
       }
     }
@@ -126,7 +126,7 @@ resource "aws_codepipeline" "pipeline" {
       output_artifacts = ["imagedefinitions"]
 
       configuration = {
-        ProjectName = "openjobs-codebuild"
+        ProjectName = "bberst-codebuild"
       }
     }
   }
