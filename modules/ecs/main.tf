@@ -67,6 +67,8 @@ resource "aws_alb_target_group" "alb_target_group" {
   lifecycle {
     create_before_destroy = true
   }
+  
+  depends_on = [aws_alb.alb_bberst]
 }
 
 /* security group for ALB */
@@ -232,7 +234,7 @@ resource "aws_ecs_service" "web" {
   load_balancer {
     target_group_arn = aws_alb_target_group.alb_target_group.arn
     container_name   = "web"
-    container_port   = "80"
+    container_port   = "3000"
   }
 
   depends_on = [
