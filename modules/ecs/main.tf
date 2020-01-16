@@ -78,6 +78,13 @@ resource "aws_security_group" "web_inbound_sg" {
   vpc_id      = var.vpc_id
 
   ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
@@ -114,11 +121,40 @@ resource "aws_alb" "alb_bberst" {
   }
 }
 
-resource "aws_alb_listener" "bberst" {
+resource "aws_iam_server_certificate" "test_cert" {
+  name             = "example-cert"
+  certificate_body = file("${path.module}/self-ca-cert.pem")
+  private_key      = file("${path.module}/test-key.pem")
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_alb_listener" "bberst_listener_80" {
   load_balancer_arn = aws_alb.alb_bberst.arn
   port              = "80"
   protocol          = "HTTP"
   depends_on        = [aws_alb_target_group.alb_target_group]
+
+  default_action {
+    type  = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
+resource "aws_alb_listener" "bberst_listener_443" {
+  load_balancer_arn = aws_alb.alb_bberst.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  depends_on        = [aws_alb_target_group.alb_target_group]
+  certificate_arn   = aws_iam_server_certificate.test_cert.arn
 
   default_action {
     target_group_arn = aws_alb_target_group.alb_target_group.arn
