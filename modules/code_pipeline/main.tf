@@ -106,7 +106,7 @@ resource "aws_codepipeline" "pipeline" {
       output_artifacts = ["source"]
 
       configuration = {
-        Owner  = "rearc"
+        Owner  = "bberst"
         Repo   = "quest"
         Branch = "master"
       }
